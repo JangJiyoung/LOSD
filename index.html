@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- 크롬 주소창 색상 최적화 -->
+    <meta name="theme-color" content="#2c3e50">
+    <title>세미나 설문조사</title>
+    <style>
+        :root { --primary: #2c3e50; --point: #3498db; --bg: #f8f9fa; }
+        
+        /* 크롬 렌더링 최적화: 스크롤 바운스 방지 */
+        body, html { 
+            margin: 0; padding: 0; width: 100%; height: 100%; 
+            background-color: var(--bg); font-family: 'Pretendard', sans-serif;
+            overflow: hidden; touch-action: manipulation;
+        }
+
+        /* 1. 포스터 모달 (크롬 레이어 최적화) */
+        #poster-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.92);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 10000; cursor: pointer;
+            will-change: opacity; transition: opacity 0.3s ease;
+        }
+        .modal-img { 
+            max-width: 92%; max-height: 85%; border-radius: 8px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            /* 크롬 이미지 하드웨어 가속 */
+            transform: translateZ(0); 
+            object-fit: contain;
+        }
+
+        /* 2. 설문 레이아웃 */
+        #survey-page { display: none; flex-direction: column; height: 100vh; opacity: 0; transition: opacity 0.3s; }
+        
+        .fixed-header { 
+            width: 100%; height: auto; min-height: 70px; max-height: 140px;
+            background: #fff; display: flex; justify-content: center; align-items: center;
+            border-bottom: 1px solid #eee; flex-shrink: 0;
+        }
+        .header-img { width: auto; height: auto; max-width: 80%; max-height: 100px; object-fit: contain; }
+
+        .progress-bar { width: 0%; height: 5px; background: var(--point); transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+
+        .survey-container { 
+            flex-grow: 1; display: flex; flex-direction: column; 
+            justify-content: center; align-items: center; padding: 25px; 
+            text-align: center; overflow-y: auto;
+        }
+
+        .question-text { font-size: 1.3rem; color: var(--primary); margin-bottom: 25px; font-weight: 700; word-break: keep-all; line-height: 1.5; }
+        
+        #input-area { width: 100%; max-width: 400px; }
+        
+        /* 크롬 인풋 최적화 */
+        input[type="text"] { 
+            width: 100%; padding: 16px; border: 2px solid #ddd; border-radius: 12px; 
+            font-size: 18px; box-sizing: border-box; outline: none; appearance: none;
+        }
+        input:focus { border-color: var(--point); box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2); }
+
+        .option-btn {
+            width: 100%; padding: 16px; margin-bottom: 12px; border: 2px solid #eee; 
+            border-radius: 12px; background: #fff; font-size: 17px; color: #444;
+            cursor: pointer; transition: all 0.2s; -webkit-tap-highlight-color: transparent;
+        }
+        .option-btn.selected { background: var(--point); color: #fff; border-color: var(--point); transform: scale(1.02); }
+
+        .btn-area { padding: 20px; max-width: 450px; width: 100%; margin: 0 auto; box-sizing: border-box; }
+        .next-btn { 
+            width: 100%; padding: 18px; background: var(--primary); color: #fff; 
+            border: none; border-radius: 12px; font-size: 1.1rem; font-weight: bold; 
+            cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .next-btn:active { transform: scale(0.98); }
+    </style>
+</head>
+<body>
+
+    <div id="poster-modal" onclick="startSurvey()">
+        <!-- loading="eager"로 크롬에서 즉시 로드 유도 -->
+        <img src="poster.jpg" class="modal-img" alt="포스터" loading="eager" onerror="this.src='https://via.placeholder.com'">
+    </div>
+
+    <div id="survey-page">
+        <div class="fixed-header">
+            <img src="top_image.jpg" class="header-img" alt="상단이미지" loading="eager" onerror="this.src='https://via.placeholder.com'">
+        </div>
+        <div class="progress-bar" id="progress"></div>
+
+        <div class="survey-container">
+            <div id="question-display" class="question-text"></div>
+            <div id="input-area"></div>
+        </div>
+
+        <div class="btn-area">
+            <button class="next-btn" id="action-btn" onclick="handleNext()">다음 문항</button>
+        </div>
+    </div>
+
+    <script>
+        const surveyQuestions = [
+            { q: "1. '사람'의 뜻이 무엇인지 아시나요?", type: "text" },
+            { q: "2. 생로병사는 누구에게 있는 것일까요?", type: "choice", options: ["짐승", "사람", "궁금하다"], multi: true },
+            { q: "3. 사람이 죽는 이유는 무엇이라고 생각하나요?", type: "choice", options: ["나이들어서(老)", "병들어서(病)", "알고싶다"], multi: true },
+            { q: "4. 생로병사의 해답은 어디에 나와 있을까요?", type: "choice", options: ["성경", "불경", "사서삼경"], multi: true },
+            { q: "5. 성경에서 생명나무 실과를 먹으면 영원히 사는데 아담은 선악과를 따서 먹고 저주받아 930년을 살았습니다. 그 이유를 아시나요?", type: "text" }
+        ];
+
+        let finalAnswers = []; let currentIdx = 0; let selectedOptions = [];
+
+        function startSurvey() {
+            const modal = document.getElementById('poster-modal');
+            const page = document.getElementById('survey-page');
+            
+            modal.style.opacity = '0';
+            setTimeout(() => {
+                modal.style.display = 'none';
+                page.style.display = 'flex';
+                // 크롬 페인팅 최적화: 약간의 지연 후 표시
+                requestAnimationFrame(() => page.style.opacity = '1');
+                renderQuestion();
+            }, 300);
+        }
+
+        function renderQuestion() {
+            const display = document.getElementById('question-display');
+            const area = document.getElementById('input-area');
+            const data = surveyQuestions[currentIdx];
+            
+            display.innerText = data.q;
+            area.innerHTML = '';
+            selectedOptions = [];
+
+            if (data.type === "text") {
+                const input = document.createElement('input');
+                input.type = 'text'; input.id = 'temp-input'; input.placeholder = "답변 입력";
+                // 크롬 모바일 키보드 대응
+                input.setAttribute('autocomplete', 'off');
+                area.appendChild(input);
+            } else {
+                data.options.forEach(opt => {
+                    const b = document.createElement('button');
+                    b.className = 'option-btn'; b.innerText = opt;
+                    b.onclick = () => {
+                        b.classList.toggle('selected');
+                        if (selectedOptions.includes(opt)) {
+                            selectedOptions = selectedOptions.filter(item => item !== opt);
+                        } else {
+                            selectedOptions.push(opt);
+                        }
+                    };
+                    area.appendChild(b);
+                });
+            }
+            document.getElementById('progress').style.width = ((currentIdx + 1) / surveyQuestions.length * 100) + '%';
+            document.getElementById('action-btn').innerText = (currentIdx === surveyQuestions.length - 1) ? "설문 제출 완료" : "다음 문항";
+        }
+
+        function handleNext() {
+            const currentData = surveyQuestions[currentIdx];
+            let answer = currentData.type === "text" ? document.getElementById('temp-input').value.trim() : selectedOptions;
+            
+            if (!answer || (Array.isArray(answer) && answer.length === 0)) {
+                alert("답변을 입력하거나 선택해 주세요."); return;
+            }
+            
+            finalAnswers.push({ q: currentData.q, a: answer });
+            
+            if (currentIdx < surveyQuestions.length - 1) {
+                currentIdx++;
+                renderQuestion();
+            } else {
+                alert("설문이 완료되었습니다. 참여해 주셔서 감사합니다.");
+                console.log("최종 결과 데이터:", finalAnswers);
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>
