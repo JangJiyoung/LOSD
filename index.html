@@ -3,34 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>인생의 해답을 찾는 세미나</title>
+    <title>세미나 설문조사</title>
     <style>
-        :root { --primary: #2c3e50; --point: #e67e22; --bg: rgba(0,0,0,0.85); }
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #f4f7f6; font-family: 'Pretendard', sans-serif; overflow: hidden; }
-
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--bg); display: flex; justify-content: center; align-items: center; z-index: 1000; }
-        .survey-card { width: 92%; max-width: 440px; background: #fff; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.3); display: flex; flex-direction: column; max-height: 90vh; }
-
-        /* 타이틀 이미지 공백 제로 */
-        .card-header { width: 100%; height: 120px; margin: 0; padding: 0; overflow: hidden; display: block; line-height: 0; font-size: 0; }
-        .header-img { width: 100% !important; height: 100% !important; object-fit: cover; display: block; }
-
-        .progress-bar { width: 0%; height: 5px; background: var(--point); transition: width 0.3s; }
-        .card-body { padding: 25px; text-align: center; min-height: 320px; display: flex; flex-direction: column; justify-content: center; overflow-y: auto; }
-        .question-text { font-size: 1.2rem; color: var(--primary); margin-bottom: 20px; font-weight: 700; word-break: keep-all; line-height: 1.5; }
+        :root { --primary: #2c3e50; --point: #3498db; --bg: rgba(0,0,0,0.85); }
         
-        /* 입력 요소 스타일 */
-        .option-btn { width: 100%; padding: 14px; margin-bottom: 10px; border: 2.3px solid #eee; border-radius: 12px; background: #fff; font-size: 16px; cursor: pointer; transition: 0.2s; color: #444; }
-        .option-btn.selected { background: var(--primary); color: #fff; border-color: var(--primary); font-weight: bold; }
-        input, select { width: 100%; padding: 14px; margin-bottom: 10px; border: 2px solid #ddd; border-radius: 12px; font-size: 16px; box-sizing: border-box; outline: none; background: #fff; }
-        label { display: block; text-align: left; font-size: 0.9rem; font-weight: bold; margin-bottom: 5px; color: #666; }
+        body, html { 
+            margin: 0; padding: 0; width: 100%; height: 100%; 
+            background: #f0f2f5; font-family: 'Pretendard', sans-serif;
+            overflow: hidden;
+        }
 
-        .card-footer { padding: 20px; background: #fdfdfd; border-top: 1px solid #eee; }
-        .next-btn { width: 100%; padding: 18px; background: var(--primary); color: #fff; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer; }
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--bg);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 1000;
+        }
 
-        /* 결과 화면 특화 */
-        .grade-box { font-size: 1.8rem; font-weight: 900; color: var(--point); margin-bottom: 10px; }
-        .grade-desc { font-size: 1rem; line-height: 1.7; color: #555; background: #f9f9f9; padding: 15px; border-radius: 12px; margin-bottom: 15px; text-align: left; }
+        /* 설문 카드 모달 */
+        #survey-modal { display: none; }
+        .survey-card {
+            width: 90%; max-width: 450px; background: #fff;
+            border-radius: 20px; overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            display: flex; flex-direction: column;
+            max-height: 90vh;
+        }
+
+        .card-header { 
+            width: 100%; 
+            height: 120px;
+            margin: 0; 
+            padding: 0; 
+            overflow: hidden;
+            display: block;
+            line-height: 0;
+            font-size: 0;
+        }
+        
+        .header-img { 
+            width: 100% !important; 
+            height: 100% !important; 
+            object-fit: cover;
+            display: block;
+            border: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        @media (max-width: 380px) {
+            .card-header, .header-img {
+                height: 90px;
+            }
+        }
+
+        .progress-bar { width: 0%; height: 4px; background: var(--point); transition: width 0.3s; }
+
+        .card-body { padding: 25px; text-align: center; min-height: 280px; display: flex; flex-direction: column; justify-content: center; overflow-y: auto; }
+        .question-text { font-size: 1.15rem; color: var(--primary); margin-bottom: 20px; font-weight: 700; word-break: keep-all; line-height: 1.5; }
+        
+        .option-btn {
+            width: 100%; padding: 14px; margin-bottom: 10px; border: 2px solid #eee; 
+            border-radius: 12px; background: #fff; font-size: 16px; color: #444;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .option-btn.selected { background: var(--point); color: #fff; border-color: var(--point); font-weight: bold; }
+
+        /* 입력창 스타일 */
+        input, select { 
+            width: 100%; padding: 14px; margin-bottom: 10px; border: 2px solid #ddd; 
+            border-radius: 12px; font-size: 16px; box-sizing: border-box; outline: none;
+        }
+        label { display: block; text-align: left; font-size: 0.85rem; font-weight: bold; margin-bottom: 4px; color: #666; }
+
+        .card-footer { padding: 20px; background: #f9f9f9; border-top: 1px solid #eee; }
+        .next-btn { 
+            width: 100%; padding: 16px; background: var(--primary); color: #fff; 
+            border: none; border-radius: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer;
+        }
+
+        /* 결과 화면 디자인 */
+        .grade-text { font-size: 1.8rem; font-weight: 900; color: var(--point); margin: 10px 0; }
+        .result-msg { font-size: 1rem; color: #555; line-height: 1.6; background: #f9f9f9; padding: 15px; border-radius: 12px; text-align: left; }
     </style>
 </head>
 <body>
@@ -40,12 +94,18 @@
         <img src="img/img_2.jpg" style="max-width:90%; border-radius:12px; cursor:pointer;" onerror="this.src='https://via.placeholder.com'">
     </div>
 
-    <!-- [Step 2] 통합 카드 모달 -->
-    <div id="survey-modal" class="modal-overlay" style="display:none;">
+    <!-- [Step 2] 설문/결과/신청 통합 모달 -->
+    <div id="survey-modal" class="modal-overlay">
         <div class="survey-card">
-            <div class="card-header"><img src="img/title.jpg" class="header-img" onerror="this.src='https://via.placeholder.com'"></div>
+            <div class="card-header">
+                <img src="img/title.jpg" class="header-img" alt="타이틀" onerror="this.src='https://via.placeholder.com'">
+            </div>
             <div id="progress" class="progress-bar"></div>
-            <div class="card-body" id="card-content"></div>
+            
+            <div class="card-body" id="card-content">
+                <!-- 동적 콘텐츠 삽입 영역 -->
+            </div>
+
             <div class="card-footer" id="card-footer">
                 <button class="next-btn" id="action-btn" onclick="handleNext()">다음 문항</button>
             </div>
@@ -53,16 +113,16 @@
     </div>
 
     <script>
-        const questions = [
+        const surveyQuestions = [
             { q: "1. '사람'의 뜻이 무엇인지 아시나요?", type: "special", options: ["알고 설명할 수 있다", "잘 모르겠다", "알고 싶다"] },
-            { q: "2. 생로병사는 누구에게 있는 것일까요?", type: "multi", options: ["짐승", "사람", "궁금하다"] },
-            { q: "3. 사람이 죽는 이유는 무엇이라고 생각하나요?", type: "multi", options: ["나이들어서(老)", "병들어서(病)", "알고싶다"] },
-            { q: "4. 생로병사의 해답은 어디에 나와 있을까요?", type: "multi", options: ["성경", "불경", "사서삼경"] },
-            { q: "5. 아담이 930년을 살았던 이유를 아시나요?", type: "text" }
+            { q: "2. 생로병사는 누구에게 있는 것일까요?", type: "choice", options: ["짐승", "사람", "궁금하다"] },
+            { q: "3. 사람이 죽는 이유는 무엇이라고 생각하나요?", type: "choice", options: ["나이들어서(老)", "병들어서(病)", "알고싶다"] },
+            { q: "4. 생로병사의 해답은 어디에 나와 있을까요?", type: "choice", options: ["성경", "불경", "사서삼경"] },
+            { q: "5. 성경에서 생명나무 실과를 먹으면 영원히 사는데 아담은 선악과를 따서 먹고 저주받아 930년을 살았습니다. 그 이유를 아시나요?", type: "special", options: ["알고 설명할 수 있다", "잘 모르겠다", "알고 싶다"] }
         ];
 
         let currentIdx = 0;
-        let score = 0; 
+        let score = 0;
 
         function openSurvey() {
             document.getElementById('poster-modal').style.display = 'none';
@@ -72,72 +132,71 @@
 
         function renderQuestion() {
             const body = document.getElementById('card-content');
-            const data = questions[currentIdx];
+            const data = surveyQuestions[currentIdx];
             body.innerHTML = `<div class="question-text">${data.q}</div><div id="input-area"></div>`;
             const area = document.getElementById('input-area');
 
-            if (data.type === "text") {
-                area.innerHTML = `<input type="text" id="ans-text" placeholder="생각을 적어주세요">`;
-            } else {
-                data.options.forEach(opt => {
-                    const b = document.createElement('button');
-                    b.className = 'option-btn'; b.innerText = opt;
-                    b.onclick = () => {
-                        if (data.type === "special" && opt !== "알고 싶다") {
-                            area.querySelectorAll('.option-btn').forEach(btn => { if(btn.innerText !== "알고 싶다") btn.classList.remove('selected'); });
+            data.options.forEach(opt => {
+                const b = document.createElement('button');
+                b.className = 'option-btn';
+                b.innerText = opt;
+                b.onclick = () => {
+                    if (data.type === "special") {
+                        if (opt === "알고 싶다") {
+                            b.classList.toggle('selected');
+                        } else {
+                            area.querySelectorAll('.option-btn').forEach(btn => {
+                                if (btn.innerText !== "알고 싶다") btn.classList.remove('selected');
+                            });
+                            b.classList.add('selected');
                         }
+                    } else {
                         b.classList.toggle('selected');
-                    };
-                    area.appendChild(b);
-                });
-            }
-            document.getElementById('progress').style.width = ((currentIdx + 1) / questions.length * 100) + '%';
+                    }
+                };
+                area.appendChild(b);
+            });
+
+            document.getElementById('progress').style.width = ((currentIdx + 1) / surveyQuestions.length * 100) + '%';
         }
 
         function handleNext() {
             const selected = document.querySelectorAll('.selected');
-            const textAns = document.getElementById('ans-text');
-            if (selected.length === 0 && (!textAns || !textAns.value.trim())) { alert("답변을 완료해 주세요."); return; }
+            if (selected.length === 0) { alert("답변을 선택해 주세요."); return; }
 
-            // 점수 합산 (관심도와 지식 수준 측정)
-            selected.forEach(s => { if(["알고 설명할 수 있다", "사람", "성경", "알고 싶다", "궁금하다"].includes(s.innerText)) score += 20; });
-            
-            if (currentIdx < questions.length - 1) {
-                currentIdx++; renderQuestion();
+            // 점수 합산 로직 (분석용)
+            selected.forEach(s => {
+                if(["알고 설명할 수 있다", "사람", "성경", "알고 싶다"].includes(s.innerText)) score += 10;
+            });
+
+            if (currentIdx < surveyQuestions.length - 1) {
+                currentIdx++;
+                renderQuestion();
             } else {
                 showResult();
             }
         }
 
         function showResult() {
-            let grade, desc;
-            if(score >= 80) {
-                grade = "심화 단계 (Advanced)";
-                desc = "근본적인 이치에 대해 이미 높은 관심을 갖고 계시는군요! 이번 세미나를 통해 <b>확실한 증거와 답</b>을 얻으실 수 있습니다. 삶의 지평이 넓어지는 순간을 함께하세요.";
-            } else if(score >= 40) {
-                grade = "탐구 단계 (Explorer)";
-                desc = "삶과 죽음에 대해 진지한 고민을 시작한 당신에게 꼭 필요한 시간입니다. <b>경서 속에 감춰진 해답</b>을 하나씩 풀어가는 과정이 세미나에서 펼쳐집니다.";
-            } else {
-                grade = "기초 단계 (Beginner)";
-                desc = "아직은 모든 것이 생소할 수 있지만, <b>생명나무의 비밀</b>은 우리 모두가 알아야 할 소중한 정보입니다. 기초부터 차근차근 확인해보는 귀한 기회를 잡아보세요.";
-            }
-            
+            let grade, msg;
+            if(score >= 50) { grade = "상 (높은 이해도)"; msg = "당신은 생명의 이치에 대해 깊은 통찰력을 가지고 계시군요! 이번 세미나를 통해 <b>감춰진 마지막 비밀</b>을 확인해보세요."; }
+            else if(score >= 30) { grade = "중 (탐구적 관심)"; msg = "삶과 죽음에 대해 진지한 고민을 하고 계신 당신, 세미나를 통해 <b>명쾌한 해답</b>을 얻으실 수 있습니다."; }
+            else { grade = "하 (입문 단계)"; msg = "생소할 수 있는 내용이지만 누구나 알아야 할 인생의 설계도입니다. <b>기초부터 확실하게</b> 풀어드리는 시간을 가져보세요."; }
+
             document.getElementById('progress').style.display = 'none';
             document.getElementById('card-content').innerHTML = `
-                <div class="question-text" style="margin-bottom:10px;">분석 결과</div>
-                <div class="grade-box">${grade}</div>
-                <div class="grade-desc">${desc}</div>
-                <p style="font-weight:bold; color:var(--primary);">이 모든 비밀을 세미나에서 확인하세요.</p>
+                <div class="question-text">나의 진단 결과</div>
+                <div class="grade-text">${grade}</div>
+                <div class="result-msg">${msg}</div>
             `;
-            document.getElementById('action-btn').innerText = "세미나 참여 신청하기";
+            document.getElementById('action-btn').innerText = "세미나 신청하러 가기";
             document.getElementById('action-btn').onclick = showApplyForm;
         }
 
         function showApplyForm() {
             document.getElementById('card-content').innerHTML = `
-                <div class="question-text" style="margin-bottom:15px;">참가 신청서</div>
-                <label>성함</label>
-                <input type="text" id="reg-name" placeholder="실명을 입력하세요">
+                <div class="question-text">세미나 참가 신청</div>
+                <label>이름</label><input type="text" id="reg-name" placeholder="실명을 입력하세요">
                 <label>연령대</label>
                 <select id="reg-age">
                     <option value="">연령 선택</option>
@@ -145,21 +204,19 @@
                     <option value="40대">40대</option><option value="50대">50대</option>
                     <option value="60대">60대</option><option value="70대 이상">70대 이상</option>
                 </select>
-                <label>사는 곳</label>
-                <input type="text" id="reg-addr" placeholder="시/군/구">
-                <label>전화번호</label>
-                <input type="tel" id="reg-phone" placeholder="010-0000-0000">
+                <label>사는 곳</label><input type="text" id="reg-addr" placeholder="시/군/구 단위">
+                <label>전화번호</label><input type="tel" id="reg-phone" placeholder="010-0000-0000">
             `;
             document.getElementById('action-btn').innerText = "신청 완료";
             document.getElementById('action-btn').onclick = finish;
         }
 
         function finish() {
-            const fields = ['reg-name', 'reg-age', 'reg-addr', 'reg-phone'];
-            for(let f of fields) { if(!document.getElementById(f).value) { alert("모든 항목을 입력해 주세요."); return; } }
+            const inputs = ['reg-name', 'reg-age', 'reg-addr', 'reg-phone'];
+            for(let id of inputs) { if(!document.getElementById(id).value) { alert("모든 정보를 입력해 주세요."); return; } }
             
             const name = document.getElementById('reg-name').value;
-            alert(`${name}님, 세미나 신청이 접수되었습니다!\n상세 일정은 기재하신 번호로 안내드리겠습니다.`);
+            alert(`${name}님, 세미나 신청이 완료되었습니다!\n상세 일정은 문자로 안내드리겠습니다.`);
             location.reload();
         }
     </script>
