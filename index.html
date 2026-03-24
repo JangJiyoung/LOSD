@@ -207,14 +207,6 @@
             document.getElementById('action-btn').onclick = finish;
         }
 
-
-        function finish() {
-            const inputs = ['reg-name', 'reg-age', 'reg-addr', 'reg-phone'];
-            for(let id of inputs) { if(!document.getElementById(id).value) { alert("모든 정보를 입력해 주세요."); return; } }
-            alert(`신청이 완료되었습니다!`);
-            location.reload();
-        }
-
         function finish() {
             const inputs = ['reg-name', 'reg-age', 'reg-addr', 'reg-phone'];
             for(let id of inputs) { 
