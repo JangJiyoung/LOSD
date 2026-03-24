@@ -212,7 +212,7 @@
             const phone = document.getElementById('reg-phone').value;
             const age = document.getElementById('reg-age').value;
             const addr = document.getElementById('reg-addr').value;
-            const grade = document.querySelector('.grade-badge').innerText;
+            //const grade = document.querySelector('.grade-badge').innerText;
         
             if(!name || !phone || !age || !addr) { 
                 alert("모든 정보를 입력해 주세요."); 
@@ -226,7 +226,7 @@
             const formData = { name, phone, age, addr, grade };
         
             // ★ 본인의 새 배포 URL로 반드시 교체하세요 ★
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbxMyk45_W-UKKeB3n13Hpd6XdS4jhQEaV8lsv0V0X_wn61qH2LWPFKZ4wv-UK3LmnP_Ug/exec'; 
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbwTw-nS2RXfcp25rhFZuzE8BxMaDQiz1pmXJN-JBCpr14YRfY2XP2i9lejIIYsyMoCp/exec'; 
         
             fetch(scriptURL, {
                 method: 'POST',
@@ -246,7 +246,7 @@
                 location.reload();
             });
         }
-
+        
     </script>
 </body>
 </html>
