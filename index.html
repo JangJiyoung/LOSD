@@ -20,7 +20,6 @@
             z-index: 1000;
         }
 
-        /* 설문 카드 모달 */
         #survey-modal { display: none; }
         .survey-card {
             width: 90%; max-width: 450px; background: #fff;
@@ -31,81 +30,54 @@
         }
 
         .card-header { 
-            width: 100%; 
-            height: 120px;
-            margin: 0; 
-            padding: 0; 
-            overflow: hidden;
-            display: block;
-            line-height: 0;
-            font-size: 0;
+            width: 100%; height: 120px; margin: 0; padding: 0; 
+            overflow: hidden; display: block; line-height: 0; font-size: 0;
         }
         
         .header-img { 
-            width: 100% !important; 
-            height: 100% !important; 
-            object-fit: cover;
-            display: block;
-            border: none;
-            margin: 0;
-            padding: 0;
+            width: 100% !important; height: 100% !important; 
+            object-fit: cover; display: block; border: none;
         }
         
-        @media (max-width: 380px) {
-            .card-header, .header-img {
-                height: 90px;
-            }
-        }
+        @media (max-width: 380px) { .card-header, .header-img { height: 90px; } }
 
         .progress-bar { width: 0%; height: 4px; background: var(--point); transition: width 0.3s; }
 
         .card-body { padding: 25px; text-align: center; min-height: 280px; display: flex; flex-direction: column; justify-content: center; overflow-y: auto; }
         .question-text { font-size: 1.15rem; color: var(--primary); margin-bottom: 20px; font-weight: 700; word-break: keep-all; line-height: 1.5; }
         
-        .option-btn {
-            width: 100%; padding: 14px; margin-bottom: 10px; border: 2px solid #eee; 
-            border-radius: 12px; background: #fff; font-size: 16px; color: #444;
-            cursor: pointer; transition: all 0.2s;
-        }
+        /* 결과 화면 강조 텍스트 */
+        .result-title { font-size: 1.5rem !important; margin-bottom: 15px; font-weight: 800; color: #333; } /* 1.2배 이상 확대 */
+        .result-msg { font-size: 1.2rem !important; color: #444; line-height: 1.7; padding: 20px; border-radius: 15px; text-align: center; font-weight: 500; } /* 1.2배 확대 */
+
+        /* 등급별 배경색 클래스 */
+        .bg-high { background-color: #e8f5e9 !important; border: 2px solid #a5d6a7; } /* 연두색 */
+        .bg-mid { background-color: #e3f2fd !important; border: 2px solid #90caf9; }  /* 연한 파란색 */
+        .bg-low { background-color: #fff3e0 !important; border: 2px solid #ffcc80; }  /* 연한 주황색 */
+
+        .option-btn { width: 100%; padding: 14px; margin-bottom: 10px; border: 2px solid #eee; border-radius: 12px; background: #fff; font-size: 16px; cursor: pointer; transition: all 0.2s; }
         .option-btn.selected { background: var(--point); color: #fff; border-color: var(--point); font-weight: bold; }
 
-        /* 입력창 스타일 */
-        input, select { 
-            width: 100%; padding: 14px; margin-bottom: 10px; border: 2px solid #ddd; 
-            border-radius: 12px; font-size: 16px; box-sizing: border-box; outline: none;
-        }
+        input, select { width: 100%; padding: 14px; margin-bottom: 10px; border: 2px solid #ddd; border-radius: 12px; font-size: 16px; box-sizing: border-box; outline: none; }
         label { display: block; text-align: left; font-size: 0.85rem; font-weight: bold; margin-bottom: 4px; color: #666; }
 
         .card-footer { padding: 20px; background: #f9f9f9; border-top: 1px solid #eee; }
-        .next-btn { 
-            width: 100%; padding: 16px; background: var(--primary); color: #fff; 
-            border: none; border-radius: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer;
-        }
+        .next-btn { width: 100%; padding: 16px; background: var(--primary); color: #fff; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer; }
 
-        /* 결과 화면 디자인 */
-        .grade-text { font-size: 1.8rem; font-weight: 900; color: var(--point); margin: 10px 0; }
-        .result-msg { font-size: 1rem; color: #555; line-height: 1.6; background: #f9f9f9; padding: 15px; border-radius: 12px; text-align: left; }
+        .grade-badge { font-size: 2.2rem; font-weight: 900; margin: 10px 0; color: #2e7d32; }
     </style>
 </head>
 <body>
 
-    <!-- [Step 1] 인트로 포스터 -->
     <div id="poster-modal" class="modal-overlay" onclick="openSurvey()">
         <img src="img/img_2.jpg" style="max-width:90%; border-radius:12px; cursor:pointer;" onerror="this.src='https://via.placeholder.com'">
     </div>
 
-    <!-- [Step 2] 설문/결과/신청 통합 모달 -->
     <div id="survey-modal" class="modal-overlay">
         <div class="survey-card">
-            <div class="card-header">
-                <img src="img/title.jpg" class="header-img" alt="타이틀" onerror="this.src='https://via.placeholder.com'">
-            </div>
+            <div class="card-header"><img src="img/title.jpg" class="header-img" onerror="this.src='https://via.placeholder.com'"></div>
             <div id="progress" class="progress-bar"></div>
-            
-            <div class="card-body" id="card-content">
-                <!-- 동적 콘텐츠 삽입 영역 -->
-            </div>
-
+            <div class="card-body" id="card-content"></div>
             <div class="card-footer" id="card-footer">
                 <button class="next-btn" id="action-btn" onclick="handleNext()">다음 문항</button>
             </div>
@@ -142,54 +114,47 @@
                 b.innerText = opt;
                 b.onclick = () => {
                     if (data.type === "special") {
-                        if (opt === "알고 싶다") {
-                            b.classList.toggle('selected');
-                        } else {
-                            area.querySelectorAll('.option-btn').forEach(btn => {
-                                if (btn.innerText !== "알고 싶다") btn.classList.remove('selected');
-                            });
+                        if (opt === "알고 싶다") b.classList.toggle('selected');
+                        else {
+                            area.querySelectorAll('.option-btn').forEach(btn => { if (btn.innerText !== "알고 싶다") btn.classList.remove('selected'); });
                             b.classList.add('selected');
                         }
-                    } else {
-                        b.classList.toggle('selected');
-                    }
+                    } else b.classList.toggle('selected');
                 };
                 area.appendChild(b);
             });
-
             document.getElementById('progress').style.width = ((currentIdx + 1) / surveyQuestions.length * 100) + '%';
         }
 
         function handleNext() {
             const selected = document.querySelectorAll('.selected');
             if (selected.length === 0) { alert("답변을 선택해 주세요."); return; }
+            selected.forEach(s => { if(["알고 설명할 수 있다", "사람", "성경", "알고 싶다"].includes(s.innerText)) score += 10; });
 
-            // 점수 합산 로직 (분석용)
-            selected.forEach(s => {
-                if(["알고 설명할 수 있다", "사람", "성경", "알고 싶다"].includes(s.innerText)) score += 10;
-            });
-
-            if (currentIdx < surveyQuestions.length - 1) {
-                currentIdx++;
-                renderQuestion();
-            } else {
-                showResult();
-            }
+            if (currentIdx < surveyQuestions.length - 1) { currentIdx++; renderQuestion(); } 
+            else showResult();
         }
 
         function showResult() {
-            let grade, msg;
-            if(score >= 50) { grade = "상 (높은 이해도)"; msg = "당신은 생명의 이치에 대해 깊은 통찰력을 가지고 계시군요! 이번 세미나를 통해 <b>감춰진 마지막 비밀</b>을 확인해보세요."; }
-            else if(score >= 30) { grade = "중 (탐구적 관심)"; msg = "삶과 죽음에 대해 진지한 고민을 하고 계신 당신, 세미나를 통해 <b>명쾌한 해답</b>을 얻으실 수 있습니다."; }
-            else { grade = "하 (입문 단계)"; msg = "생소할 수 있는 내용이지만 누구나 알아야 할 인생의 설계도입니다. <b>기초부터 확실하게</b> 풀어드리는 시간을 가져보세요."; }
+            let grade, msg, bgColorClass, gradeTxtColor;
+            if(score >= 50) { 
+                grade = "[상]"; msg = "당신은 생명의 이치에 대해 깊은 통찰력을 가지고 계시군요! 이번 세미나를 통해 감춰진 마지막 비밀을 확인해보세요."; 
+                bgColorClass = "bg-high"; gradeTxtColor = "#2e7d32";
+            } else if(score >= 30) { 
+                grade = "[중]"; msg = "삶과 죽음에 대해 진지한 고민을 하고 계신 당신, 세미나를 통해 명쾌한 해답을 얻으실 수 있습니다."; 
+                bgColorClass = "bg-mid"; gradeTxtColor = "#1565c0";
+            } else { 
+                grade = "[하]"; msg = "생소할 수 있는 내용이지만 누구나 알아야 할 인생의 설계도입니다. 기초부터 확실하게 풀어드리는 시간을 가져보세요."; 
+                bgColorClass = "bg-low"; gradeTxtColor = "#e65100";
+            }
 
             document.getElementById('progress').style.display = 'none';
             document.getElementById('card-content').innerHTML = `
-                <div class="question-text">나의 진단 결과</div>
-                <div class="grade-text">${grade}</div>
-                <div class="result-msg">${msg}</div>
+                <div class="result-title">나의 진단 결과</div>
+                <div class="grade-badge" style="color:${gradeTxtColor}">${grade}</div>
+                <div class="result-msg ${bgColorClass}">${msg}</div>
             `;
-            document.getElementById('action-btn').innerText = "세미나 신청하러 가기";
+            document.getElementById('action-btn').innerText = "세미나 신청하기";
             document.getElementById('action-btn').onclick = showApplyForm;
         }
 
@@ -204,19 +169,16 @@
                     <option value="40대">40대</option><option value="50대">50대</option>
                     <option value="60대">60대</option><option value="70대 이상">70대 이상</option>
                 </select>
-                <label>사는 곳</label><input type="text" id="reg-addr" placeholder="시/군/구 단위">
+                <label>사는 곳</label><input type="text" id="reg-addr" placeholder="시/군/구">
                 <label>전화번호</label><input type="tel" id="reg-phone" placeholder="010-0000-0000">
             `;
-            document.getElementById('action-btn').innerText = "신청 완료";
             document.getElementById('action-btn').onclick = finish;
         }
 
         function finish() {
             const inputs = ['reg-name', 'reg-age', 'reg-addr', 'reg-phone'];
             for(let id of inputs) { if(!document.getElementById(id).value) { alert("모든 정보를 입력해 주세요."); return; } }
-            
-            const name = document.getElementById('reg-name').value;
-            alert(`${name}님, 세미나 신청이 완료되었습니다!\n상세 일정은 문자로 안내드리겠습니다.`);
+            alert(`신청이 완료되었습니다!`);
             location.reload();
         }
     </script>
