@@ -209,11 +209,21 @@
         }
 
         function finish() {
+
+            /*
             const name = document.getElementById('reg-name').value;
             const phone = document.getElementById('reg-phone').value;
             const age = document.getElementById('reg-age').value;
             const addr = document.getElementById('reg-addr').value;
-        
+            */
+
+            const payload = {
+               name : document.getElementById('reg-name').value,
+               phone : document.getElementById('reg-phone').value,
+               age : document.getElementById('reg-age').value,
+               addr : document.getElementById('reg-addr').value
+    		};
+            
             if(!name || !phone || !age || !addr) { 
                 alert("모든 정보를 입력해 주세요."); 
                 return; 
@@ -224,7 +234,8 @@
             actionBtn.disabled = true;
         
             const formData = { name, phone, age, addr };
-        
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbwTw-nS2RXfcp25rhFZuzE8BxMaDQiz1pmXJN-JBCpr14YRfY2XP2i9lejIIYsyMoCp/exec'; 
+        /*
             // ★ 본인의 새 배포 URL로 반드시 교체하세요 ★
             const scriptURL = 'https://script.google.com/macros/s/AKfycbwTw-nS2RXfcp25rhFZuzE8BxMaDQiz1pmXJN-JBCpr14YRfY2XP2i9lejIIYsyMoCp/exec'; 
         
@@ -245,7 +256,60 @@
                 alert("신청이 접수되었습니다. (네트워크 상태에 따라 확인이 늦어질 수 있습니다)");
                 location.reload();
             });
+        */
+            try {
+        			Swal.fire({ title: '신청 중...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+        
+        			const response = await fetch(SCRIPT_URL, {
+        				method: 'POST',
+        				mode: 'no-cors', // 구글 앱 스크립트 특성상 no-cors가 필요할 수 있음
+        				cache: 'no-cache',
+        				headers: { 'Content-Type': 'application/json' },
+        				body: JSON.stringify(payload)
+        			});
+        
+        			Swal.fire({
+        				icon: 'success',
+        				title: '신청 완료!',
+        				text: '세미나 일정 안내를 위해 곧 연락드리겠습니다.',
+        				confirmButtonColor: 'var(--primary)'
+        			});
+        		} catch (error) {
+        			Swal.fire('오류 발생', '전송에 실패했습니다. 관리자에게 문의하세요.', 'error');
+        	}
         }
+
+        async function sendToGoogleSheet(formValues) {
+    		const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwTw-nS2RXfcp25rhFZuzE8BxMaDQiz1pmXJN-JBCpr14YRfY2XP2i9lejIIYsyMoCp/exec'; // 실제 배포한 URL로 교체
+    
+    		const payload = {
+    			name = document.getElementById('reg-name').value,
+                phone = document.getElementById('reg-phone').value,
+                age = document.getElementById('reg-age').value,
+                addr = document.getElementById('reg-addr').value
+    		};
+    
+    		try {
+    			Swal.fire({ title: '신청 중...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+    
+    			const response = await fetch(SCRIPT_URL, {
+    				method: 'POST',
+    				mode: 'no-cors', // 구글 앱 스크립트 특성상 no-cors가 필요할 수 있음
+    				cache: 'no-cache',
+    				headers: { 'Content-Type': 'application/json' },
+    				body: JSON.stringify(payload)
+    			});
+    
+    			Swal.fire({
+    				icon: 'success',
+    				title: '신청 완료!',
+    				text: '세미나 일정 안내를 위해 곧 연락드리겠습니다.',
+    				confirmButtonColor: 'var(--primary)'
+    			});
+    		} catch (error) {
+    			Swal.fire('오류 발생', '전송에 실패했습니다. 관리자에게 문의하세요.', 'error');
+    		}
+    	}
         
     </script>
 </body>
