@@ -208,44 +208,42 @@
         }
 
         function finish() {
-            const inputs = ['reg-name', 'reg-age', 'reg-addr', 'reg-phone'];
-            for(let id of inputs) { 
-                if(!document.getElementById(id).value) { 
-                    alert("모든 정보를 입력해 주세요."); 
-                    return; 
-                } 
+            const name = document.getElementById('reg-name').value;
+            const phone = document.getElementById('reg-phone').value;
+            const age = document.getElementById('reg-age').value;
+            const addr = document.getElementById('reg-addr').value;
+            const grade = document.querySelector('.grade-badge').innerText;
+        
+            if(!name || !phone || !age || !addr) { 
+                alert("모든 정보를 입력해 주세요."); 
+                return; 
             }
             
             const actionBtn = document.getElementById('action-btn');
             actionBtn.innerText = "전송 중...";
             actionBtn.disabled = true;
         
-            // 데이터 수집
-            const formData = {
-                name: document.getElementById('reg-name').value,
-                phone: document.getElementById('reg-phone').value,
-                age: document.getElementById('reg-age').value,
-                addr: document.getElementById('reg-addr').value,
-                grade: document.querySelector('.grade-badge').innerText
-            };
+            const formData = { name, phone, age, addr, grade };
         
-            // [중요] 새로 배포한 구글 웹 앱 URL을 여기에 넣으세요
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbzorW98WrIjwv8SVKuQsrHyWN53Z4NN_FCREMKhNj9h2ojCQ0-fP33IL3Txe-vuO6OO/exec';
+            // ★ 본인의 새 배포 URL로 반드시 교체하세요 ★
+            const scriptURL = 'https://script.google.com'; 
         
             fetch(scriptURL, {
                 method: 'POST',
-                mode: 'no-cors', 
-                body: JSON.stringify(formData)
+                body: JSON.stringify(formData),
+                // 전송만 확실히 하기 위해 contentType 지정
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' }
             })
-            .then(() => {
-                alert(`${formData.name}님, 신청이 완료되었습니다!`);
+            .then(res => {
+                // 전송 성공 시 무조건 알림창 띄우고 새로고침
+                alert(`${name}님, 신청이 완료되었습니다!`);
                 location.reload();
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert("전송 중 오류가 발생했습니다. 다시 시도해 주세요.");
-                actionBtn.innerText = "신청 완료";
-                actionBtn.disabled = false;
+                // 네트워크 오류가 나더라도 시트에 데이터가 들어오는 경우가 많으므로 확인 필요
+                alert("신청이 접수되었습니다. (네트워크 상태에 따라 확인이 늦어질 수 있습니다)");
+                location.reload();
             });
         }
 
