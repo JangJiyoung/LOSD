@@ -136,32 +136,64 @@
         }
 
         function showResult() {
-            let grade, msg, bgColorClass, gradeTxtColor;
-            if(score >= 50) { 
-                grade = "[상]"; msg = "당신은 생명의 이치에 대해 깊은 통찰력을 가지고 계시군요! 이번 세미나를 통해 감춰진 마지막 비밀을 확인해보세요."; 
-                bgColorClass = "bg-high"; gradeTxtColor = "#2e7d32";
-            } else if(score >= 30) { 
-                grade = "[중]"; msg = "삶과 죽음에 대해 진지한 고민을 하고 계신 당신, 세미나를 통해 명쾌한 해답을 얻으실 수 있습니다."; 
-                bgColorClass = "bg-mid"; gradeTxtColor = "#1565c0";
+            let grade, desc, bgColorClass, gradeTxtColor, badgeTxt;
+            
+            // 점수 체계 및 등급 설정
+            if(score >= 80) { 
+                badgeTxt = "[상]";
+                grade = "심화 단계 (Advanced)";
+                desc = "근본적인 이치에 대해 이미 높은 관심을 갖고 계시는군요! 이번 세미나를 통해 <b>확실한 증거와 답</b>을 얻으실 수 있습니다. 삶의 지평이 넓어지는 순간을 함께하세요."; 
+                bgColorClass = "bg-high"; // 연두색 배경
+                gradeTxtColor = "#2e7d32"; // 진한 녹색 글자
+            } else if(score >= 40) { 
+                badgeTxt = "[중]";
+                grade = "탐구 단계 (Explorer)";
+                desc = "삶과 죽음에 대해 진지한 고민을 시작한 당신에게 꼭 필요한 시간입니다. <b>경서 속에 감춰진 해답</b>을 하나씩 풀어가는 과정이 세미나에서 펼쳐집니다."; 
+                bgColorClass = "bg-mid";  // 연한 파란색 배경
+                gradeTxtColor = "#1565c0"; // 진한 파란색 글자
             } else { 
-                grade = "[하]"; msg = "생소할 수 있는 내용이지만 누구나 알아야 할 인생의 설계도입니다. 기초부터 확실하게 풀어드리는 시간을 가져보세요."; 
-                bgColorClass = "bg-low"; gradeTxtColor = "#e65100";
+                badgeTxt = "[하]";
+                grade = "기초 단계 (Beginner)";
+                desc = "아직은 모든 것이 생소할 수 있지만, <b>생명나무의 비밀</b>은 우리 모두가 알아야 할 소중한 정보입니다. 기초부터 차근차근 확인해보는 귀한 기회를 잡아보세요."; 
+                bgColorClass = "bg-low";  // 연한 주황색 배경
+                gradeTxtColor = "#e65100"; // 진한 주황색 글자
             }
-
+        
+            // 결과 화면 렌더링
             document.getElementById('progress').style.display = 'none';
             document.getElementById('card-content').innerHTML = `
                 <div class="result-title">나의 진단 결과</div>
-                <div class="grade-badge" style="color:${gradeTxtColor}">${grade}</div>
-                <div class="result-msg ${bgColorClass}">${msg}</div>
+                <div class="grade-badge" style="color:${gradeTxtColor}; margin-bottom:5px;">${badgeTxt}</div>
+                <div style="font-size:1.2rem; font-weight:bold; color:${gradeTxtColor}; margin-bottom:15px;">${grade}</div>
+                <div class="result-msg ${bgColorClass}">${desc}</div>
             `;
-            document.getElementById('action-btn').innerText = "세미나 신청하기";
+            
+            document.getElementById('action-btn').innerText = "인생의 해답 신청하기";
             document.getElementById('action-btn').onclick = showApplyForm;
         }
 
+
+        // 전화번호 자동 하이픈 생성 함수
+        function formatPhoneNumber(input) {
+            let value = input.value.replace(/[^0-9]/g, ''); // 숫자만 남기기
+            if (value.length > 3 && value.length <= 7) {
+                input.value = value.slice(0, 3) + '-' + value.slice(3);
+            } else if (value.length > 7) {
+                input.value = value.slice(0, 3) + '-' + value.slice(3, 7) + '-' + value.slice(7, 11);
+            } else {
+                input.value = value;
+            }
+        }
+        
+        // 신청서 화면 렌더링 수정
         function showApplyForm() {
             document.getElementById('card-content').innerHTML = `
                 <div class="question-text">세미나 참가 신청</div>
                 <label>이름</label><input type="text" id="reg-name" placeholder="실명을 입력하세요">
+                <label>전화번호</label>
+                <input type="tel" id="reg-phone" maxlength="13" 
+                       oninput="formatPhoneNumber(this)" 
+                       placeholder="010-0000-0000">
                 <label>연령대</label>
                 <select id="reg-age">
                     <option value="">연령 선택</option>
@@ -170,10 +202,11 @@
                     <option value="60대">60대</option><option value="70대 이상">70대 이상</option>
                 </select>
                 <label>사는 곳</label><input type="text" id="reg-addr" placeholder="시/군/구">
-                <label>전화번호</label><input type="tel" id="reg-phone" placeholder="010-0000-0000">
             `;
+            document.getElementById('action-btn').innerText = "신청 완료";
             document.getElementById('action-btn').onclick = finish;
         }
+
 
         function finish() {
             const inputs = ['reg-name', 'reg-age', 'reg-addr', 'reg-phone'];
@@ -205,7 +238,7 @@
             };
         
             // [중요] 새로 배포한 구글 웹 앱 URL을 여기에 넣으세요
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbxd5SiWZi66mH8xqARyG70WH9GZtFWiggatoIqiSlpxJAgDbZ3kgxzrEdsZpp1jeB0/exec';
+            const scriptURL = 'https://script.google.com/macros/s/AKfycby1f4V_eufYo6PTdDdT6ovN_CztZ7zv7UxPM73g5gmeTUElcReUeDtm1a2OyDlDAJQa/exec';
         
             fetch(scriptURL, {
                 method: 'POST',
