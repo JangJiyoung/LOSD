@@ -3,184 +3,163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>세미나 설문조사</title>
+    <title>인생의 근본 해답 찾기</title>
     <style>
-        :root { --primary: #2c3e50; --point: #3498db; --bg: rgba(0,0,0,0.85); }
+        :root { --primary: #1a2a3a; --point: #d4af37; --text: #333; } /* 고급스러운 골드&네이비 톤 */
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #eceef1; font-family: 'Pretendard', sans-serif; overflow: hidden; }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.88); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+        .survey-card { width: 92%; max-width: 420px; background: #fff; border-radius: 24px; overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.4); display: flex; flex-direction: column; }
+
+        /* 타이틀 이미지 공백 제로 */
+        .card-header { width: 100%; height: 130px; margin: 0; padding: 0; overflow: hidden; display: block; line-height: 0; }
+        .header-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+        .progress-bar { width: 0%; height: 5px; background: var(--point); transition: width 0.3s; }
+        .card-body { padding: 30px 25px; text-align: center; min-height: 300px; display: flex; flex-direction: column; justify-content: center; }
+        .question-text { font-size: 1.25rem; color: var(--primary); margin-bottom: 25px; font-weight: 800; word-break: keep-all; line-height: 1.6; }
         
-        body, html { 
-            margin: 0; padding: 0; width: 100%; height: 100%; 
-            background: #f0f2f5; font-family: 'Pretendard', sans-serif;
-            overflow: hidden;
-        }
+        /* 버튼 및 입력창 */
+        .option-btn { width: 100%; padding: 16px; margin-bottom: 12px; border: 1.5px solid #eee; border-radius: 14px; background: #fff; font-size: 16px; cursor: pointer; transition: 0.3s; color: #555; }
+        .option-btn.selected { background: var(--primary); color: #fff; border-color: var(--primary); font-weight: bold; transform: scale(1.02); }
+        input { width: 100%; padding: 16px; margin-bottom: 12px; border: 2px solid #eee; border-radius: 14px; font-size: 16px; box-sizing: border-box; outline: none; transition: 0.3s; }
+        input:focus { border-color: var(--point); }
 
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: var(--bg);
-            display: flex; justify-content: center; align-items: center;
-            z-index: 1000;
-        }
+        .card-footer { padding: 25px; background: #fcfcfc; border-top: 1px solid #f0f0f0; }
+        .next-btn { width: 100%; padding: 18px; background: var(--primary); color: #fff; border: none; border-radius: 14px; font-size: 1.15rem; font-weight: bold; cursor: pointer; box-shadow: 0 5px 15px rgba(26,42,58,0.2); }
 
-        /* 설문 카드 모달 */
-        #survey-modal { display: none; }
-        .survey-card {
-            width: 90%; max-width: 450px; background: #fff;
-            border-radius: 20px; overflow: hidden; /* 이미지가 삐져나가지 않게 함 */
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-            display: flex; flex-direction: column;
-        }
-
-        /* [수정] 타이틀 이미지 공간 - 공백 없이 꽉 채움 */
-       /* [수정된 부분] 타이틀 이미지 공간 - 모바일 최적화 */
-        .card-header { 
-            width: 100%; 
-            height: 120px;          /* 모바일 권장 높이 (필요시 조절 가능) */
-            margin: 0; 
-            padding: 0; 
-            overflow: hidden;       /* 이미지가 넘쳐도 밖으로 나가지 않게 함 */
-            display: block;         /* flex 제거로 불필요한 중앙 정렬 여백 방지 */
-            line-height: 0;         /* 텍스트 줄바꿈 공백 제거 */
-            font-size: 0;           /* 인라인 요소 공백 제거 */
-        }
-        
-        .header-img { 
-            width: 100% !important; /* 가로 꽉 채움 */
-            height: 100% !important; /* 세로 꽉 채움 */
-            object-fit: cover;      /* [핵심] 이미지 비율에 상관없이 공간을 꽉 채움 */
-            display: block;         /* 이미지 하단 기본 여백 제거 */
-            border: none;
-            margin: 0;
-            padding: 0;
-        }
-        
-        /* 설문 카드 모서리 둥글게 유지 */
-        .survey-card {
-            width: 90%; 
-            max-width: 450px; 
-            background: #fff;
-            border-radius: 20px; 
-            overflow: hidden;       /* 상단 이미지가 둥근 모서리에 맞춰 잘리도록 함 */
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        }
-        
-        /* 화면이 아주 작은 폰을 위한 추가 조절 */
-        @media (max-width: 380px) {
-            .card-header, .header-img {
-                max-height: 90px;   /* 더 작은 화면에서는 높이를 더 줄임 */
-            }
-        }
-
-        .progress-bar { width: 0%; height: 4px; background: var(--point); transition: width 0.3s; }
-
-        .card-body { padding: 25px; text-align: center; min-height: 250px; display: flex; flex-direction: column; justify-content: center; }
-        .question-text { font-size: 1.2rem; color: var(--primary); margin-bottom: 20px; font-weight: 700; word-break: keep-all; line-height: 1.5; }
-        
-        .option-btn {
-            width: 100%; padding: 14px; margin-bottom: 10px; border: 2px solid #eee; 
-            border-radius: 12px; background: #fff; font-size: 16px; color: #444;
-            cursor: pointer; transition: all 0.2s;
-        }
-        .option-btn.selected { background: var(--point); color: #fff; border-color: var(--point); font-weight: bold; }
-
-        .card-footer { padding: 20px; background: #f9f9f9; border-top: 1px solid #eee; }
-        .next-btn { 
-            width: 100%; padding: 16px; background: var(--primary); color: #fff; 
-            border: none; border-radius: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer;
-        }
+        /* 결과창 특수 스타일 */
+        .result-title { font-size: 0.9rem; color: var(--point); font-weight: bold; letter-spacing: 1px; margin-bottom: 5px; }
+        .result-grade { font-size: 1.8rem; font-weight: 900; color: var(--primary); margin-bottom: 15px; }
+        .result-desc { font-size: 1rem; color: #444; line-height: 1.7; text-align: left; background: #f9f9f9; padding: 15px; border-radius: 12px; border-left: 4px solid var(--point); }
     </style>
 </head>
 <body>
 
-    <!-- [Step 1] 포스터 모달 (동일) -->
+    <!-- [Step 1] 인트로 포스터 -->
     <div id="poster-modal" class="modal-overlay" onclick="openSurvey()">
-        <img src="img/img_2.jpg" class="poster-img" style="max-width:90%; border-radius:12px;" onerror="this.src='https://via.placeholder.com'">
+        <img src="poster.jpg" class="header-img" style="max-width:90%; height:auto; border-radius:15px; cursor:pointer;" onerror="this.src='https://via.placeholder.com'">
+        <p style="position:absolute; bottom:8%; color:#fff; animation: blink 1.5s infinite;">화면을 터치하여 내면의 답을 찾아보세요</p>
     </div>
 
-    <!-- [Step 2] 설문 카드 모달 -->
-    <div id="survey-modal" class="modal-overlay">
+    <!-- [Step 2] 설문/결과/신청 통합 카드 -->
+    <div id="survey-modal" class="modal-overlay" style="display:none;">
         <div class="survey-card">
-            <!-- 타이틀 이미지 영역: 공백 없음 -->
-            <div class="card-header">
-                <img src="img/title.jpg" class="header-img" alt="타이틀 이미지" onerror="this.src='https://via.placeholder.com'">
-            </div>
-            
-            <div class="progress-bar" id="progress"></div>
-            
-            <div class="card-body">
-                <div id="question-display" class="question-text"></div>
-                <div id="input-area"></div>
-            </div>
-
-            <div class="card-footer">
-                <button class="next-btn" id="action-btn" onclick="handleNext()">다음 문항</button>
+            <div class="card-header"><img src="top_image.jpg" class="header-img" onerror="this.src='https://via.placeholder.com'"></div>
+            <div id="progress" class="progress-bar"></div>
+            <div class="card-body" id="card-content"></div>
+            <div class="card-footer" id="card-footer">
+                <button class="next-btn" id="action-btn" onclick="handleNext()">다음 단계로</button>
             </div>
         </div>
     </div>
 
     <script>
-        // 1번 문항 특수 로직 포함된 기존 스크립트 동일 적용
-        const surveyQuestions = [
-            { q: "1. '사람'의 뜻이 무엇인지 아시나요?", type: "special", options: ["알고 설명할 수 있다", "잘 모르겠다", "알고 싶다"] },
-            { q: "2. 생로병사는 누구에게 있는 것일까요?", type: "choice", options: ["짐승", "사람", "궁금하다"] },
-            { q: "3. 사람이 죽는 이유는 무엇이라고 생각하나요?", type: "choice", options: ["나이들어서(老)", "병들어서(病)", "알고싶다"] },
-            { q: "4. 생로병사의 해답은 어디에 나와 있을까요?", type: "choice", options: ["성경", "불경", "사서삼경"] },
+        const questions = [
+            { q: "1. '사람'이라는 존재의 참된 의미와 그 근원을 깊이 생각해 보신 적이 있나요?", type: "special", options: ["확실히 알고 설명할 수 있다", "막연하게만 알고 있다", "이제는 정말 알고 싶다"] },
+            { q: "2. 인류의 숙제인 '생로병사'는 과연 해결 불가능한 운명일까요?", type: "choice", options: ["피할 수 없는 순리다", "해답이 있을 것 같다", "반드시 알고 싶다"] },
+            { q: "3. 사람이 생명을 다하는 근본적인 원인은 무엇이라고 보십니까?", type: "choice", options: ["노화와 질병(현상적 이유)", "풀지 못한 근본적 이유가 있다", "그 이유를 찾고 싶다"] },
+            { q: "4. 생로병사의 완전한 해답은 어디에 담겨 있을까요?", type: "choice", options: ["경서(성경, 불경 등)", "철학적 고찰", "직접 확인해보고 싶다"] },
             { q: "5. 성경에서 생명나무 실과를 먹으면 영원히 사는데 아담은 선악과를 따서 먹고 저주받아 930년을 살았습니다. 그 이유를 아시나요?", type: "special", options: ["알고 설명할 수 있다", "잘 모르겠다", "알고 싶다"] }
         ];
 
         let currentIdx = 0;
+        let interestScore = 0; 
 
         function openSurvey() {
             document.getElementById('poster-modal').style.display = 'none';
-            document.getElementById('survey-modal').style.display = 'flex';
+            document.getElementById('survey-page-show', document.getElementById('survey-modal').style.display = 'flex');
             renderQuestion();
         }
 
         function renderQuestion() {
-            const display = document.getElementById('question-display');
+            const body = document.getElementById('card-content');
+            const data = questions[currentIdx];
+            body.innerHTML = `<div class="question-text">${data.q}</div><div id="input-area"></div>`;
             const area = document.getElementById('input-area');
-            const data = surveyQuestions[currentIdx];
-            display.innerText = data.q;
-            area.innerHTML = '';
 
             if (data.type === "text") {
-                const input = document.createElement('input');
-                input.type = 'text'; input.id = 'temp-input'; input.placeholder = "답변을 입력해 주세요";
-                input.style.width="100%"; input.style.padding="15px"; input.style.borderRadius="12px"; input.style.border="2px solid #ddd"; input.style.boxSizing="border-box";
-                area.appendChild(input);
-            } else if (data.type === "special") {
-                data.options.forEach(opt => {
-                    const b = document.createElement('button');
-                    b.className = 'option-btn'; b.innerText = opt;
-                    b.onclick = () => {
-                        if (opt === "알고 싶다") b.classList.toggle('selected');
-                        else {
-                            area.querySelectorAll('.option-btn').forEach(btn => { if (btn.innerText !== "알고 싶다") btn.classList.remove('selected'); });
-                            b.classList.add('selected');
-                        }
-                    };
-                    area.appendChild(b);
-                });
+                area.innerHTML = `<input type="text" id="ans-text" placeholder="${data.placeholder}">`;
             } else {
                 data.options.forEach(opt => {
                     const b = document.createElement('button');
                     b.className = 'option-btn'; b.innerText = opt;
-                    b.onclick = () => b.classList.toggle('selected');
+                    b.onclick = () => {
+                        if (data.type === "special" && opt !== "이제는 정말 알고 싶다") {
+                            area.querySelectorAll('.option-btn').forEach(btn => { if(btn.innerText !== "이제는 정말 알고 싶다") btn.classList.remove('selected'); });
+                        } else if (data.type === "choice") {
+                            area.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('selected'));
+                        }
+                        b.classList.toggle('selected');
+                    };
                     area.appendChild(b);
                 });
             }
-            document.getElementById('progress').style.width = ((currentIdx + 1) / surveyQuestions.length * 100) + '%';
-            document.getElementById('action-btn').innerText = (currentIdx === surveyQuestions.length - 1) ? "제출 완료" : "다음 문항";
+            document.getElementById('progress').style.width = ((currentIdx + 1) / questions.length * 100) + '%';
         }
 
         function handleNext() {
-            const data = surveyQuestions[currentIdx];
-            let answer = data.type === "text" ? document.getElementById('temp-input').value.trim() : 
-                        Array.from(document.querySelectorAll('.option-btn.selected')).map(n => n.innerText);
+            const selected = document.querySelectorAll('.selected');
+            const textAns = document.getElementById('ans-text');
+            if (selected.length === 0 && (!textAns || !textAns.value.trim())) { alert("답변을 선택하거나 입력해 주세요."); return; }
 
-            if (!answer || (Array.isArray(answer) && answer.length === 0)) { alert("답변을 입력하거나 선택해 주세요."); return; }
+            // 설득력을 위한 점수 산출 (관심도 중심)
+            selected.forEach(s => {
+                if(["이제는 정말 알고 싶다", "반드시 알고 싶다", "직접 확인해보고 싶다", "경서(성경, 불경 등)"].includes(s.innerText)) interestScore += 25;
+            });
+            if(textAns && textAns.value.trim().length > 2) interestScore += 10;
 
-            if (currentIdx < surveyQuestions.length - 1) { currentIdx++; renderQuestion(); } 
-            else { alert("설문이 완료되었습니다."); location.reload(); }
+            if (currentIdx < questions.length - 1) {
+                currentIdx++; renderQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            let grade, desc;
+            if(interestScore >= 70) {
+                grade = "진리 탐구자 (Seeker)";
+                desc = "당신은 인생의 본질에 대해 매우 깊은 갈증을 느끼고 계시군요. 단편적인 지식이 아닌, <b>생명의 근원적 해답</b>을 만날 준비가 되셨습니다. 이번 세미나가 당신 인생의 터닝포인트가 될 것입니다.";
+            } else if(interestScore >= 35) {
+                grade = "지적 성찰자 (Thinker)";
+                desc = "삶과 죽음의 문제에 대해 진지한 고민을 시작하셨군요. 혼자 고민해서는 알 수 없었던 <b>경서 속의 감춰진 비밀</b>을 통해 막혔던 시야가 시원하게 열리는 경험을 제안합니다.";
+            } else {
+                grade = "새로운 발견자 (Discoverer)";
+                desc = "아직은 모든 것이 생소할 수 있습니다. 하지만 <b>아담의 비밀과 생로병사의 이유</b>는 모든 인간이 알아야 할 권리입니다. 가벼운 마음으로 참석하셔서 인생의 새로운 가치를 발견해 보세요.";
+            }
+            
+            document.getElementById('progress').style.display = 'none';
+            document.getElementById('card-content').innerHTML = `
+                <div class="result-title">나의 영적 통찰력 단계</div>
+                <div class="result-grade">${grade}</div>
+                <div class="result-desc">${desc}</div>
+                <p style="margin-top:15px; font-weight:bold; color:var(--primary);">지금, 그 해답을 확인하시겠습니까?</p>
+            `;
+            document.getElementById('action-btn').innerText = "인생의 해답 신청하기";
+            document.getElementById('action-btn').onclick = showApplyForm;
+        }
+
+        function showApplyForm() {
+            document.getElementById('card-content').innerHTML = `
+                <div class="question-text" style="margin-bottom:15px;">세미나 우선 신청</div>
+                <p style="font-size:0.9rem; margin-bottom:20px;">신청 정보를 남겨주시면<br>특별 세미나 초대장을 발송해 드립니다.</p>
+                <input type="text" id="reg-name" placeholder="성함 (실명)">
+                <input type="text" id="reg-addr" placeholder="사는곳 (시/군/구)">
+                <p style="font-size:0.8rem; color:var(--point); font-weight:bold;">* 한정된 좌석으로 조기 마감될 수 있습니다.</p>
+            `;
+            document.getElementById('action-btn').innerText = "초대장 신청 완료";
+            document.getElementById('action-btn').onclick = finish;
+        }
+
+        function finish() {
+            const name = document.getElementById('reg-name').value;
+            const addr = document.getElementById('reg-addr').value;
+            if(!name || !addr) { alert("성함과 지역을 입력해 주세요."); return; }
+            alert(`감사합니다, ${name}님!\n진정한 해답을 향한 첫걸음을 응원합니다.\n곧 연락드리겠습니다.`);
+            location.reload();
         }
     </script>
+    <style>@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }</style>
 </body>
 </html>
