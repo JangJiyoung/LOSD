@@ -212,7 +212,7 @@
         function startSurvey() {
             if (!userData.gender || !userData.age) {
                 // 요청하신 Swal 문법 적용
-                Swal.fire('안녕하세요!', '성별과 연령대를 모두 선택해주세요!', 'success');
+                Swal.fire('안녕하세요!', '내용을 모두 기록해주세요!', 'success');
                 return;
             }
             document.getElementById('intro-area').style.display = 'none';
