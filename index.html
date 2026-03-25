@@ -130,7 +130,11 @@
 
         function handleNext() {
             const selected = document.querySelectorAll('.selected');
-            if (selected.length === 0) { alert("답변을 선택해 주세요."); return; }
+            if (selected.length === 0) { 
+                //alert("답변을 선택해 주세요."); 
+                Swal.fire('안녕하세요!', '답변을 선택해 주세요.', 'success');
+                return; 
+            }
             selected.forEach(s => { if(["알고 설명할 수 있다", "사람", "성경", "알고 싶다"].includes(s.innerText)) score += 10; });
 
             if (currentIdx < surveyQuestions.length - 1) { currentIdx++; renderQuestion(); } 
