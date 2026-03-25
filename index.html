@@ -239,18 +239,32 @@
                 padding: '20px 10px',
                 borderRadius: '25px',
                 preConfirm: () => {
-                    const name = document.getElementById('swal-input-name').value;
+                    const name = document.getElementById('swal-input-name').value.trim();
                     const phone = document.getElementById('swal-input-phone').value;
                     const age = document.getElementById('swal-input-age').value;
-                    const addr = document.getElementById('swal-input-addr').value;
-        
-                    if (!name) { Swal.showValidationMessage('성함을 입력해주세요.'); return false; }
-                    if (phone.length < 13) { Swal.showValidationMessage('전화번호를 확인해주세요.'); return false; }
-                    if (!age) { Swal.showValidationMessage('연령대를 선택해주세요.'); return false; }
-                    if (!addr) { Swal.showValidationMessage('지역을 입력해주세요.'); return false; }
-        
+                    const addr = document.getElementById('swal-input-addr').value.trim();
+                
+                    // 검증 로직을 함수로 분리하여 재사용
+                    const showError = (msg) => {
+                        Swal.showValidationMessage(msg); // 메시지 표시
+                        
+                        // 1.5초(1500ms) 후에 메시지 숨기기
+                        setTimeout(() => {
+                            const validationMessage = Swal.getValidationMessage();
+                            if (validationMessage) {
+                                validationMessage.style.display = 'none'; 
+                            }
+                        }, 1500);
+                    };
+                
+                    if (!name) { showError('성함을 입력해주세요.'); return false; }
+                    if (phone.length < 13) { showError('전화번호를 확인해주세요.'); return false; }
+                    if (!age) { showError('연령대를 선택해주세요.'); return false; }
+                    if (!addr) { showError('지역을 입력해주세요.'); return false; }
+                
                     return { name, phone, age, addr };
                 }
+
             });
         
             if (formValues) {
