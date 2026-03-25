@@ -100,7 +100,7 @@
             { q: "1. '사람'의 뜻이 무엇인지 아시나요?", type: "special", options: ["알고 설명할 수 있다", "잘 모르겠다", "알고 싶다"] },
             { q: "2. 생로병사는 누구에게 있는 것일까요?", type: "choice", options: ["짐승", "사람", "궁금하다"] },
             { q: "3. 사람이 죽는 이유는 무엇이라고 생각하나요?", type: "choice", options: ["나이들어서(老)", "병들어서(病)", "알고싶다"] },
-            { q: "4. 생로병사의 해답은 어디에 나와 있을까요?", type: "choice", options: ["성경", "불경", "궁금하다"] },
+            { q: "4. 생로병사의 해답은 어디에 나와 있을까요?", type: "choice", options: ["성경", "불경", "4서3경", "궁금하다"] },
             { q: "5. 성경에서 생명나무 실과를 먹으면 영원히 사는데 아담은 선악과를 따서 먹고 저주받아 930년을 살았습니다. 그 이유를 아시나요?", type: "special", options: ["알고 설명할 수 있다", "잘 모르겠다", "알고 싶다"] }
         ];
 
@@ -178,7 +178,7 @@
             document.getElementById('progress').style.display = 'none';
             document.getElementById('card-content').innerHTML = `
                 <div class="result-title">나의 진단 결과</div>
-                <div class="grade-badge" style="color:${gradeTxtColor}; margin-bottom:5px;">${badgeTxt}</div>
+               
                 <div style="font-size:1.2rem; font-weight:bold; color:${gradeTxtColor}; margin-bottom:15px;">${grade}</div>
                 <div class="result-msg ${bgColorClass}">${desc}</div>
             `;
