@@ -190,29 +190,39 @@
         // 신청서 화면 렌더링 수정
         // 1. 버튼 클릭 시 호출되는 함수 (모달 팝업 띄우기)
         async function showApplyForm() {
-            const seminarImg = "img/Semina_Health.png"; // 세미나 홍보 이미지 경로
+            const seminarImg = "img/Semina_Health.png"; 
         
             const { value: formValues } = await Swal.fire({
-                title: '<div style="font-weight:450; font-size:1.4rem; color:#222; letter-spacing:-0.5px;">세미나 신청하기</div>',
+                title: '<div style="font-weight:800; font-size:1.4rem; color:#222;">세미나 신청하기</div>',
                 html: `
-                    <!-- 이미지 영역: 부드러운 하단 그림자(box-shadow) 적용 -->
-                    <div style="width:100%; overflow:hidden; border-radius:15px; border:1px solid #eee; margin-bottom:12px; box-shadow: 0 10px 20px -5px rgba(0,0,0,0.1);">
-                        <img src="${seminarImg}" style="width:100%; display:block; object-fit:cover;">
+                    <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+                        <!-- 이미지 영역 -->
+                        <div style="width:calc(100% - 10px); overflow:hidden; border-radius:15px; border:1px solid #eee; margin-bottom:15px; box-shadow: 0 10px 20px -5px rgba(0,0,0,0.1);">
+                            <img src="${seminarImg}" style="width:100%; display:block; object-fit:cover;">
+                        </div>
+        
+                        <p style="font-size:0.85rem; color:#777; margin-bottom:15px; line-height:1.4; text-align:center;">정확한 정보를 입력하시면<br>상세 일정을 안내해 드립니다.</p>
+                        
+                        <!-- 입력란들: 중앙 정렬 및 너비 고정 -->
+                        <input id="swal-input-name" class="swal2-input" placeholder="성함 입력" 
+                               style="width:calc(100% - 40px); margin: 10px 0; box-sizing: border-box;">
+                        
+                        <input id="swal-input-phone" class="swal2-input" placeholder="전화번호 (010-0000-0000)" maxlength="13" 
+                               style="width:calc(100% - 40px); margin: 10px 0; box-sizing: border-box;">
+                        
+                        <select id="swal-input-age" class="swal2-select" 
+                                style="width:calc(100% - 40px); margin: 10px 0; box-sizing: border-box; display: flex;">
+                            <option value="">연령 선택</option>
+                            <option value="20대">20대</option><option value="30대">30대</option>
+                            <option value="40대">40대</option><option value="50대">50대</option>
+                            <option value="60대">60대</option><option value="70대 이상">70대 이상</option>
+                        </select>
+                        
+                        <input id="swal-input-addr" class="swal2-input" placeholder="사는 곳 (시/군/구)" 
+                               style="width:calc(100% - 40px); margin: 10px 0; box-sizing: border-box;">
                     </div>
-                    <p style="font-size:0.85rem; color:#777; margin-bottom:18px; line-height:1.4;">정확한 정보를 입력하시면<br>세미나 상세 일정을 안내해 드립니다.</p>
-                    
-                    <input id="swal-input-name" class="swal2-input" placeholder="성함 입력" style="margin-top:0;">
-                    <input id="swal-input-phone" class="swal2-input" placeholder="전화번호 (010-0000-0000)" maxlength="13">
-                    <select id="swal-input-age" class="swal2-select" style="width:70%; margin-top:15px;">
-                        <option value="">연령 선택</option>
-                        <option value="20대">20대</option><option value="30대">30대</option>
-                        <option value="40대">40대</option><option value="50대">50대</option>
-                        <option value="60대">60대</option><option value="70대 이상">70대 이상</option>
-                    </select>
-                    <input id="swal-input-addr" class="swal2-input" placeholder="사는 곳 (시/군/구)">
                 `,
                 didOpen: () => {
-                    // 전화번호 자동 하이픈 기능
                     const phoneInput = document.getElementById('swal-input-phone');
                     phoneInput.addEventListener('input', (e) => {
                         let val = e.target.value.replace(/[^0-9]/g, '');
@@ -222,19 +232,22 @@
                     });
                 },
                 confirmButtonText: '신청 완료하기',
-                confirmButtonColor: '#4CAF50', // 포인트 컬러에 맞게 수정하세요
+                confirmButtonColor: '#4CAF50',
                 showCancelButton: true,
                 cancelButtonText: '닫기',
+                width: '350px', // 모달 전체 너비 고정으로 더 깔끔하게
+                padding: '20px 10px',
+                borderRadius: '25px',
                 preConfirm: () => {
                     const name = document.getElementById('swal-input-name').value;
                     const phone = document.getElementById('swal-input-phone').value;
                     const age = document.getElementById('swal-input-age').value;
                     const addr = document.getElementById('swal-input-addr').value;
         
-                    if (!name || name.length < 2) { Swal.showValidationMessage('성함을 2자 이상 입력해주세요.'); return false; }
-                    if (!phone || phone.length < 13) { Swal.showValidationMessage('전화번호를 확인해주세요.'); return false; }
+                    if (!name) { Swal.showValidationMessage('성함을 입력해주세요.'); return false; }
+                    if (phone.length < 13) { Swal.showValidationMessage('전화번호를 확인해주세요.'); return false; }
                     if (!age) { Swal.showValidationMessage('연령대를 선택해주세요.'); return false; }
-                    if (!addr) { Swal.showValidationMessage('주소를 입력해주세요.'); return false; }
+                    if (!addr) { Swal.showValidationMessage('지역을 입력해주세요.'); return false; }
         
                     return { name, phone, age, addr };
                 }
@@ -244,7 +257,7 @@
                 sendData(formValues);
             }
         }
-        
+
         // 2. 구글 시트로 데이터 전송하는 함수
         async function sendData(formData) {
             const scriptURL = 'https://script.google.com/macros/s/AKfycbwTw-nS2RXfcp25rhFZuzE8BxMaDQiz1pmXJN-JBCpr14YRfY2XP2i9lejIIYsyMoCp/exec';
