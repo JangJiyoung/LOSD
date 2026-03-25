@@ -204,53 +204,65 @@
         // 1. 버튼 클릭 시 호출되는 함수 (모달 팝업 띄우기)
         async function showApplyForm() {
             const { value: formValues } = await Swal.fire({
-            padding: '0',
-            borderRadius: '50px',
-            width: '380px',
-            confirmButtonColor: '#00A86B',
-            confirmButtonText: '신청 완료하기',
-            showCancelButton: true,
-            cancelButtonText: '닫기',
-            // 버튼 하단 여백을 타이틀 상단 여백과 동일하게 맞춤 (약 25px)
-            customClass: {
-                actions: 'my-swal-actions'
-            },
-            showClass: { popup: 'animate__animated animate__fadeInDown' },
-            
-            html: `
-                <!-- 타이틀 영역: 상단 여백 25px 확보 -->
-                <div style="background-color: #00A86B; color: white; padding: 25px 0 18px 0; 
-                            border-radius: 50px 50px 0 0; font-weight: 800; font-size: 1.35rem; 
-                            text-align: center; width: 100%; margin-bottom: 20px;">
-                    세미나 신청하기
-                </div>
-    
-                <!-- 입력부: 좌우 및 하단 여백 -->
-                <div style="display: flex; flex-direction: column; align-items: center; width: 100%; padding: 0 25px; box-sizing: border-box;">
-                    <p style="font-size:0.95rem; color:#666; margin-bottom:15px; line-height:1.4; text-align:center;">
-                        정확한 정보를 입력해 주세요.<br>
-                        <span style="font-size:0.85rem; color:#999;">확인 후 상세 일정을 안내해 드립니다.</span>
-                    </p>
-                    
-                    <input id="swal-input-name" class="swal2-input custom-placeholder" placeholder="성함 입력" 
-                           style="width:100%; margin: 6px 0; box-sizing: border-box; height: 42px; border-radius: 12px; font-size: 1rem;">
-                    
-                    <input id="swal-input-phone" class="swal2-input custom-placeholder" placeholder="전화번호 (010-0000-0000)" maxlength="13" 
-                           style="width:100%; margin: 6px 0; box-sizing: border-box; height: 42px; border-radius: 12px; font-size: 1rem;">
-                    
-                    <select id="swal-input-age" class="swal2-select custom-placeholder" 
-                            style="width:100%; margin: 6px 0; box-sizing: border-box; height: 42px; border-radius: 12px; font-size: 1rem;">
-                        <option value="">연령 선택</option>
-                        <option value="20대">20대</option><option value="30대">30대</option>
-                        <option value="40대">40대</option><option value="50대">50대</option>
-                        <option value="60대">60대</option><option value="70대 이상">70대 이상</option>
-                    </select>
-                    
-                    <input id="swal-input-addr" class="swal2-input custom-placeholder" placeholder="사는 곳 (시/군/구)" 
-                           style="width:100%; margin: 6px 0; box-sizing: border-box; height: 42px; border-radius: 12px; font-size: 1rem;">
-                </div>
+                padding: '0',
+                borderRadius: '50px',
+                width: '380px',
+                confirmButtonColor: '#00A86B',
+                confirmButtonText: '신청 완료하기',
+                showCancelButton: true,
+                cancelButtonText: '닫기',
+                showClass: { popup: 'animate__animated animate__fadeInDown' },
+                
+                html: `
+                    <div style="background-color: #00A86B; color: white; padding: 25px 0 18px 0; 
+                                border-radius: 50px 50px 0 0; font-weight: 800; font-size: 1.35rem; 
+                                text-align: center; width: 100%; margin-bottom: 20px;">
+                        세미나 신청하기
+                    </div>
+        
+                    <div style="display: flex; flex-direction: column; align-items: center; width: 100%; padding: 0 25px; box-sizing: border-box;">
+                        <p style="font-size:0.9rem; color:#666; margin-bottom:15px; line-height:1.4; text-align:center;">
+                            정확한 정보를 입력해 주세요.<br>
+                            <span style="font-size:0.8rem; color:#999;">확인 후 상세 일정을 안내해 드립니다.</span>
+                        </p>
+                        
+                        <input id="swal-input-name" class="swal2-input custom-placeholder" placeholder="성함 입력" 
+                               style="width:100%; margin: 6px 0; box-sizing: border-box; height: 42px; border-radius: 12px; font-size: 1rem;">
+                        
+                        <input id="swal-input-phone" class="swal2-input custom-placeholder" placeholder="전화번호 (010-0000-0000)" maxlength="13" 
+                               style="width:100%; margin: 6px 0; box-sizing: border-box; height: 42px; border-radius: 12px; font-size: 1rem;">
+                        
+                        <select id="swal-input-age" class="swal2-select custom-placeholder" 
+                                style="width:100%; margin: 6px 0; box-sizing: border-box; height: 42px; border-radius: 12px; font-size: 1rem;">
+                            <option value="">연령 선택</option>
+                            <option value="20대">20대</option><option value="30대">30대</option>
+                            <option value="40대">40대</option><option value="50대">50대</option>
+                            <option value="60대">60대</option><option value="70대 이상">70대 이상</option>
+                        </select>
+                        
+                        <input id="swal-input-addr" class="swal2-input custom-placeholder" placeholder="사는 곳 (시/군/구)" 
+                               style="width:100%; margin: 6px 0; box-sizing: border-box; height: 42px; border-radius: 12px; font-size: 1rem; margin-bottom:15px;">
+        
+                        <!-- 개인정보처리동의서 영역 -->
+                        <div style="width:100%; background:#f9f9f9; padding:12px; border-radius:10px; border:1px solid #eee; text-align:left; box-sizing:border-box;">
+                            <div style="font-size:0.75rem; font-weight:bold; color:#444; margin-bottom:5px;">[개인정보처리동의서]</div>
+                            <div style="font-size:0.7rem; color:#777; line-height:1.4; letter-spacing:-0.3px;">
+                                귀하는 본 설문에 개인정보(이름, 전화번호)가 활용되는 것에 동의합니다. 
+                                처리된 개인정보는 세미나 목적으로만 사용되며 [법률 제 148395호]에 의해 다른 용도나 목적으로 사용할 수 없습니다.
+                            </div>
+                            <label style="display:flex; align-items:center; margin-top:8px; cursor:pointer; font-size:0.8rem; color:#333; font-weight:bold;">
+                                <input type="checkbox" id="swal-input-agree" style="margin-right:8px; width:16px; height:16px; accent-color:#00A86B;">
+                                동의합니다
+                            </label>
+                        </div>
+                    </div>
                 `,
                 didOpen: () => {
+                    const actions = Swal.getActions();
+                    if (actions) {
+                        actions.style.marginBottom = '25px';
+                        actions.style.marginTop = '15px';
+                    }
                     const phoneInput = document.getElementById('swal-input-phone');
                     phoneInput.addEventListener('input', (e) => {
                         let val = e.target.value.replace(/[^0-9]/g, '');
@@ -264,6 +276,7 @@
                     const phone = document.getElementById('swal-input-phone').value;
                     const age = document.getElementById('swal-input-age').value;
                     const addr = document.getElementById('swal-input-addr').value.trim();
+                    const agree = document.getElementById('swal-input-agree').checked;
         
                     const showError = (msg) => {
                         Swal.showValidationMessage(msg);
@@ -277,6 +290,7 @@
                     if (phone.length < 13) { showError('전화번호를 확인해주세요.'); return false; }
                     if (!age) { showError('연령대를 선택해주세요.'); return false; }
                     if (!addr) { showError('지역을 입력해주세요.'); return false; }
+                    if (!agree) { showError('개인정보 활용에 동의해주세요.'); return false; }
         
                     return { name, phone, age, addr };
                 }
