@@ -208,7 +208,7 @@
             document.getElementById('action-btn').onclick = finish;
         }
 
-        async function finish() {
+        function finish() {
 
             /*
             const name = document.getElementById('reg-name').value;
@@ -235,9 +235,6 @@
         
             const formData = { name, phone, age, addr };
             const scriptURL = 'https://script.google.com/macros/s/AKfycbwTw-nS2RXfcp25rhFZuzE8BxMaDQiz1pmXJN-JBCpr14YRfY2XP2i9lejIIYsyMoCp/exec'; 
-        /*
-            // ★ 본인의 새 배포 URL로 반드시 교체하세요 ★
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbwTw-nS2RXfcp25rhFZuzE8BxMaDQiz1pmXJN-JBCpr14YRfY2XP2i9lejIIYsyMoCp/exec'; 
         
             fetch(scriptURL, {
                 method: 'POST',
@@ -256,7 +253,10 @@
                 alert("신청이 접수되었습니다. (네트워크 상태에 따라 확인이 늦어질 수 있습니다)");
                 location.reload();
             });
-        */
+          /*
+            // ★ 본인의 새 배포 URL로 반드시 교체하세요 ★
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbwTw-nS2RXfcp25rhFZuzE8BxMaDQiz1pmXJN-JBCpr14YRfY2XP2i9lejIIYsyMoCp/exec'; 
+            
             try {
         			Swal.fire({ title: '신청 중...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
         
@@ -277,6 +277,7 @@
         		} catch (error) {
         			Swal.fire('오류 발생', '전송에 실패했습니다. 관리자에게 문의하세요.', 'error');
         	}
+        */
         }
         
     </script>
