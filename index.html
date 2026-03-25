@@ -67,13 +67,13 @@
 
         .grade-badge { font-size: 2.2rem; font-weight: 900; margin: 10px 0; color: #2e7d32; }
 
-        .swal2-input::placeholder { font-size: 0.9em; color: #bbb; } /* 색상도 살짝 연하게 하면 더 깔끔합니다 */ 
+        .swal2-input::placeholder { font-size: 1em; color: #bbb; } /* 색상도 살짝 연하게 하면 더 깔끔합니다 */ 
         
         /* IE, Edge를 위한 설정 */
-        .swal2-input:-ms-input-placeholder { font-size: 0.9em; }
+        .swal2-input:-ms-input-placeholder { font-size: 1em; }
         
         /* 셀렉트 박스의 첫 번째 기본 옵션(힌트) 크기 조절 */
-        .swal2-select option:first-child { font-size: 0.9em; }
+        .swal2-select option:first-child { font-size: 1em; }
     
     </style>
 </head>
@@ -204,51 +204,51 @@
         // 1. 버튼 클릭 시 호출되는 함수 (모달 팝업 띄우기)
         async function showApplyForm() {
             const { value: formValues } = await Swal.fire({
-                // 1. 모달 자체 패딩을 제거하여 타이틀을 벽면에 밀착
-                padding: '0',
-                borderRadius: '50px',
-                width: '380px',
-                confirmButtonColor: '#00A86B',
-                confirmButtonText: '신청 완료하기',
-                showCancelButton: true,
-                cancelButtonText: '닫기',
-                
-                // 2. 배경색이 삐져나오지 않도록 모달 컨테이너 설정
-                showClass: { popup: 'animate__animated animate__fadeInDown' },
-                
-                html: `
-                    <!-- 3. 타이틀 영역: 상하 여백 축소(padding 18px), 모달과 동일한 50px 상단 곡률 -->
-                    <div style="background-color: #00A86B; color: white; padding: 18px 0; 
-                                border-radius: 50px 50px 0 0; font-weight: 800; font-size: 1.35rem; 
-                                text-align: center; width: 100%; margin-bottom: 20px;
-                                box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                        세미나 신청하기
-                    </div>
-        
-                    <!-- 4. 하단 입력부: 좌우 및 하단 여백 최적화 -->
-                    <div style="display: flex; flex-direction: column; align-items: center; width: 100%; padding: 0 25px 25px 25px; box-sizing: border-box;">
-                        <p style="font-size:1rem; color:#666; margin-bottom:15px; line-height:1.4; text-align:center;">
-                            정확한 정보를 입력해 주세요.<br>
-                            <span style="font-size:1rem; color:#999;">확인 후 상세 일정을 안내해 드립니다.</span>
-                        </p>
-                        
-                        <input id="swal-input-name" class="swal2-input custom-placeholder" placeholder="성함 입력" 
-                               style="width:100%; margin: 6px 0; box-sizing: border-box; height: 42px; border-radius: 12px; font-size: 0.95rem;">
-                        
-                        <input id="swal-input-phone" class="swal2-input custom-placeholder" placeholder="전화번호 (010-0000-0000)" maxlength="13" 
-                               style="width:100%; margin: 6px 0; box-sizing: border-box; height: 42px; border-radius: 12px; font-size: 0.95rem;">
-                        
-                        <select id="swal-input-age" class="swal2-select custom-placeholder" 
-                                style="width:100%; margin: 6px 0; box-sizing: border-box; height: 42px; border-radius: 12px; font-size: 0.9rem;">
-                            <option value="">연령 선택</option>
-                            <option value="20대">20대</option><option value="30대">30대</option>
-                            <option value="40대">40대</option><option value="50대">50대</option>
-                            <option value="60대">60대</option><option value="70대 이상">70대 이상</option>
-                        </select>
-                        
-                        <input id="swal-input-addr" class="swal2-input custom-placeholder" placeholder="사는 곳 (시/군/구)" 
-                               style="width:100%; margin: 6px 0; box-sizing: border-box; height: 42px; border-radius: 12px; font-size: 0.95rem;">
-                    </div>
+            padding: '0',
+            borderRadius: '50px',
+            width: '380px',
+            confirmButtonColor: '#00A86B',
+            confirmButtonText: '신청 완료하기',
+            showCancelButton: true,
+            cancelButtonText: '닫기',
+            // 버튼 하단 여백을 타이틀 상단 여백과 동일하게 맞춤 (약 25px)
+            customClass: {
+                actions: 'my-swal-actions'
+            },
+            showClass: { popup: 'animate__animated animate__fadeInDown' },
+            
+            html: `
+                <!-- 타이틀 영역: 상단 여백 25px 확보 -->
+                <div style="background-color: #00A86B; color: white; padding: 25px 0 18px 0; 
+                            border-radius: 50px 50px 0 0; font-weight: 800; font-size: 1.35rem; 
+                            text-align: center; width: 100%; margin-bottom: 20px;">
+                    세미나 신청하기
+                </div>
+    
+                <!-- 입력부: 좌우 및 하단 여백 -->
+                <div style="display: flex; flex-direction: column; align-items: center; width: 100%; padding: 0 25px; box-sizing: border-box;">
+                    <p style="font-size:0.95rem; color:#666; margin-bottom:15px; line-height:1.4; text-align:center;">
+                        정확한 정보를 입력해 주세요.<br>
+                        <span style="font-size:0.85rem; color:#999;">확인 후 상세 일정을 안내해 드립니다.</span>
+                    </p>
+                    
+                    <input id="swal-input-name" class="swal2-input custom-placeholder" placeholder="성함 입력" 
+                           style="width:100%; margin: 6px 0; box-sizing: border-box; height: 42px; border-radius: 12px; font-size: 1rem;">
+                    
+                    <input id="swal-input-phone" class="swal2-input custom-placeholder" placeholder="전화번호 (010-0000-0000)" maxlength="13" 
+                           style="width:100%; margin: 6px 0; box-sizing: border-box; height: 42px; border-radius: 12px; font-size: 1rem;">
+                    
+                    <select id="swal-input-age" class="swal2-select custom-placeholder" 
+                            style="width:100%; margin: 6px 0; box-sizing: border-box; height: 42px; border-radius: 12px; font-size: 1rem;">
+                        <option value="">연령 선택</option>
+                        <option value="20대">20대</option><option value="30대">30대</option>
+                        <option value="40대">40대</option><option value="50대">50대</option>
+                        <option value="60대">60대</option><option value="70대 이상">70대 이상</option>
+                    </select>
+                    
+                    <input id="swal-input-addr" class="swal2-input custom-placeholder" placeholder="사는 곳 (시/군/구)" 
+                           style="width:100%; margin: 6px 0; box-sizing: border-box; height: 42px; border-radius: 12px; font-size: 1rem;">
+                </div>
                 `,
                 didOpen: () => {
                     const phoneInput = document.getElementById('swal-input-phone');
