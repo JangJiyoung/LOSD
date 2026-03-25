@@ -66,6 +66,15 @@
         .next-btn { width: 100%; padding: 16px; background: var(--primary); color: #fff; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer; }
 
         .grade-badge { font-size: 2.2rem; font-weight: 900; margin: 10px 0; color: #2e7d32; }
+
+        .swal2-input::placeholder { font-size: 0.9em; color: #bbb; } /* 색상도 살짝 연하게 하면 더 깔끔합니다 */ 
+        
+        /* IE, Edge를 위한 설정 */
+        .swal2-input:-ms-input-placeholder { font-size: 0.9em; }
+        
+        /* 셀렉트 박스의 첫 번째 기본 옵션(힌트) 크기 조절 */
+        .swal2-select option:first-child { font-size: 0.9em; }
+    
     </style>
 </head>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
