@@ -30,7 +30,7 @@
         }
 
         .card-header { 
-            width: 100%; height: 90px; margin: 0; padding: 0; 
+            width: 100%; height: 80px; margin: 0; padding: 0; 
             overflow: hidden; display: block; line-height: 0; font-size: 0;
             box-shadow: 0px 12px 10px -10px gray; 
         }
@@ -100,7 +100,7 @@
             { q: "1. '사람'의 뜻이 무엇인지 아시나요?", type: "special", options: ["알고 설명할 수 있다", "잘 모르겠다", "알고 싶다"] },
             { q: "2. 생로병사는 누구에게 있는 것일까요?", type: "choice", options: ["짐승", "사람", "궁금하다"] },
             { q: "3. 사람이 죽는 이유는 무엇이라고 생각하나요?", type: "choice", options: ["나이들어서(老)", "병들어서(病)", "알고싶다"] },
-            { q: "4. 생로병사의 해답은 어디에 나와 있을까요?", type: "choice", options: ["성경", "불경", "사서삼경"] },
+            { q: "4. 생로병사의 해답은 어디에 나와 있을까요?", type: "choice", options: ["성경", "불경", "궁금하다"] },
             { q: "5. 성경에서 생명나무 실과를 먹으면 영원히 사는데 아담은 선악과를 따서 먹고 저주받아 930년을 살았습니다. 그 이유를 아시나요?", type: "special", options: ["알고 설명할 수 있다", "잘 모르겠다", "알고 싶다"] }
         ];
 
@@ -144,7 +144,7 @@
                 Swal.fire('안녕하세요!', '답변을 선택해 주세요.', 'success');
                 return; 
             }
-            selected.forEach(s => { if(["알고 설명할 수 있다", "사람", "성경", "알고 싶다"].includes(s.innerText)) score += 10; });
+            selected.forEach(s => { if(["궁금하다", "알고 싶다"].includes(s.innerText)) score += 20; });
 
             if (currentIdx < surveyQuestions.length - 1) { currentIdx++; renderQuestion(); } 
             else showResult();
@@ -155,21 +155,21 @@
             
             // 점수 체계 및 등급 설정
             if(score >= 80) { 
-                badgeTxt = "[상]";
+                //badgeTxt = "[상]";
                 grade = "심화 단계 (Advanced)";
                 desc = "근본적인 이치에 대해 이미 높은 관심을 갖고 계시는군요! 이번 세미나를 통해 <b>확실한 증거와 답</b>을 얻으실 수 있습니다. 삶의 지평이 넓어지는 순간을 함께하세요."; 
                 bgColorClass = "bg-high"; // 연두색 배경
                 gradeTxtColor = "#2e7d32"; // 진한 녹색 글자
             } else if(score >= 40) { 
-                badgeTxt = "[중]";
+                //badgeTxt = "[중]";
                 grade = "탐구 단계 (Explorer)";
                 desc = "삶과 죽음에 대해 진지한 고민을 시작한 당신에게 꼭 필요한 시간입니다. <b>경서 속에 감춰진 해답</b>을 하나씩 풀어가는 과정이 세미나에서 펼쳐집니다."; 
                 bgColorClass = "bg-mid";  // 연한 파란색 배경
                 gradeTxtColor = "#1565c0"; // 진한 파란색 글자
             } else { 
-                badgeTxt = "[하]";
+                //badgeTxt = "[하]";
                 grade = "기초 단계 (Beginner)";
-                desc = "아직은 모든 것이 생소할 수 있지만, <b>생명나무의 비밀</b>은 우리 모두가 알아야 할 소중한 정보입니다. 기초부터 차근차근 확인해보는 귀한 기회를 잡아보세요."; 
+                desc = "아직은 모든 것이 생소할 수 있지만, <b>생명나무의 비밀</b>은 우리 모두가 알아야 할 소중한 내용입니다. 차근차근 확인해보는 귀한 기회를 잡아보세요."; 
                 bgColorClass = "bg-low";  // 연한 주황색 배경
                 gradeTxtColor = "#e65100"; // 진한 주황색 글자
             }
